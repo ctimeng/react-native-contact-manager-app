@@ -1,0 +1,78 @@
+{
+    "people":[
+       {
+          "id":1,
+          "name":"Stan Patrick",
+          "city":"Gdansk",
+          "avatar":"https://cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png",
+          "social_networks":{
+             "facebook":"https://www.facebook.com",
+             "twitter":"https://help.twitter.com",
+             "instagram":"https://www.instagram.com",
+             "linkedin":"https://www.linkedin.com",
+             "skype":"https://www.skype.com"
+          },
+          "company":"Soft solutions",
+          "position":"frontend developer",
+          "isFavourite":false,
+          "isContact":false
+       },
+       {
+        "id":2,
+        "name":"Aleksandr Patrick",
+        "city":"Gdansk",
+        "avatar":"https://www.stepstherapy.com.au/wp-content/uploads/2018/10/Yazmin-profile-picture-square.jpg",
+        "social_networks":{
+         "facebook":"https://www.facebook.com",
+         "twitter":"https://help.twitter.com"
+        },
+        "company":"Soft solutions",
+        "position":"frontend developer",
+        "isFavourite":false,
+        "isContact":false
+     },
+     {
+        "id":3,
+        "name":"Borys Patrick",
+        "city":"Gdansk",
+        "avatar":"https://sunrift.com/wp-content/uploads/2014/12/Blake-profile-photo-square-1024x1024.jpg",
+        "social_networks":{
+         "facebook":"https://www.facebook.com",
+         "twitter":"https://help.twitter.com"
+        },
+        "company":"HCL Technologies",
+        "position":"frontend developer",
+        "isFavourite":false,
+        "isContact":false
+     },
+     {
+        "id":4,
+        "name":"Grigory Patrick",
+        "city":"Ukraine, Kharkiv",
+        "avatar":"https://simplybeautysydney.files.wordpress.com/2013/01/brad-profile-square.jpg",
+        "social_networks":{
+         "facebook":"https://www.facebook.com",
+         "twitter":"https://help.twitter.com"
+        },
+        "company":"Tech Mahindra",
+        "position":"frontend developer",
+        "isFavourite":false,
+        "isContact":false
+     },
+     {
+        "id":5,
+        "name":"Grigory Patrick",
+        "city":"Ukraine, Lviv",
+        "avatar":"https://www.sony.dk/alphauniverse/assets/resized/2020/11/Julien-Mauve-profile_square_291x291.jpg",
+        "social_networks":{
+         "facebook":"https://www.facebook.com",
+         "twitter":"https://help.twitter.com"
+        },
+        "company":"Larsen & Toubro Infotech",
+        "position":"frontend developer",
+        "isFavourite":false,
+        "isContact":false
+     }
+    ]
+ }
+ 
