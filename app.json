@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "react-native-contact-manager-app",
+    "slug": "react-native-contact-manager-app",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "react-native-contact-manager-app"
+}
