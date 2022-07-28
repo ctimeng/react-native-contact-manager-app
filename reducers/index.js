@@ -43,19 +43,7 @@ export default function variable(state = initialState, action) {
     case ADD_CONTACT:
       index = getFindIndexById(state.peoples, action.payload)
       people = state.peoples[index]
-      people.isContact = true
-      if (people.hasOwnProperty('refId') && people.refId !== '') {
-        updateFirebase(people.refId, { isContact : true })
-      }
-
-      return {
-        ...state,
-        peoples: [...state.peoples],
-      };
-    case DELETE_CONTACT:
-      index = getFindIndexById(state.peoples, action.payload)
-      people = state.peoples[index]
-      people.isContact = false
+      people.isContact = !people.isContact
       if (people.hasOwnProperty('refId') && people.refId !== '') {
         updateFirebase(people.refId, { isContact : true })
       }
@@ -67,21 +55,9 @@ export default function variable(state = initialState, action) {
     case ADD_FAVOURITE:
       index = getFindIndexById(state.peoples, action.payload)
       people = state.peoples[index]
-      people.isFavourite = true
+      people.isFavourite = !people.isFavourite
       if (people.hasOwnProperty('refId') && people.refId !== '') {
         updateFirebase(people.refId, { isFavourite : true })
-      }
-
-      return {
-        ...state,
-        peoples: [...state.peoples],
-      };
-    case DELETE_FAVOURITE:
-      index = getFindIndexById(state.peoples, action.payload)
-      people = state.peoples[index]
-      people.isFavourite = false
-      if (people.hasOwnProperty('refId') && people.refId !== '') {
-        updateFirebase(people.refId, { isFavourite : false })
       }
 
       return {

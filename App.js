@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
-import HomeScreen from './screens/Home';
-import ContactScreen from './screens/Contact';
-import FavouriteScreen from './screens/Favourite';
-import PeopleScreen from './screens/People';
-import CompanyScreen from './screens/Company';
+import HomeScreen from './components/Home';
+import ContactScreen from './components/Contact';
+import FavouriteScreen from './components/Favourite';
+import PeopleScreen from './components/People';
+import CompanyScreen from './components/Company';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faHome, faAddressBook, faHeart, faUser, faShoppingBag } from '@fortawesome/free-solid-svg-icons'
 import { connect } from "react-redux";
@@ -23,7 +23,7 @@ const App = (props) => {
     <NavigationContainer>
       <Drawer.Navigator initialRouteName="Home">
         <Drawer.Screen
-          name="Home"
+          name="HOME"
           component={HomeScreen} options={{
             drawerIcon: ({ focused }) =>
               <FontAwesomeIcon icon={faHome} />

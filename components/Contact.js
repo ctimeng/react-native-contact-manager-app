@@ -1,6 +1,6 @@
 import { FlatList, View, StyleSheet } from "react-native";
 import { connect } from "react-redux";
-import { DeleteContact } from "../actions";
+import { AddContact, AddFavourite } from "../actions";
 import Row from "./Row";
 
 const styles = StyleSheet.create({
@@ -21,24 +21,25 @@ const ContactScreen = (props) => {
       return props.peoples.filter((people) => people.isContact === true)
   };
 
-  const handleContact = () => {
-    props.navigation.navigate("CONTACT");
-  };
+  const onAddContact = (id) => {
+    props.AddContact(id);
+  }
 
-  const handleFavourite = () => {
+  const onAddFavourite = (id) => {
+    props.AddFavourite(id);
     props.navigation.navigate("FAVOURITE");
-  };
+  }
 
   const onItemPress = () => {
     console.log("onItemPress");
   }
 
-  const renderItem = ({ item, index }) => {
+  const renderItem = ({ item }) => {
     return (
       <Row
         people={item}
-        handleContact={handleContact}
-        handleFavourite={handleFavourite}
+        onAddContact={onAddContact}
+        onAddFavourite={onAddFavourite}
         onItemPress={onItemPress}
       />
     );
@@ -56,7 +57,8 @@ const mapStateToProps = (state) => ({
 
 function mapDispatchToProps(dispatch) {
   return {
-    DeleteContact: (index) => dispatch(DeleteContact(index)),
+    AddContact: (index) => dispatch(AddContact(index)),
+    AddFavourite:(id) => dispatch(AddFavourite(id))
   };
 }
 
