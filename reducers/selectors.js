@@ -1,0 +1,1 @@
+export const getPeoples = (state) => state.peoples
