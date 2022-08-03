@@ -2,6 +2,22 @@ const FIREBASE_ENABLE = true;
 const FIREBASE_COLLECTION_PEOPLES = "peoples";
 const GRID_COLUMN = 4;
 const COLUMN_SIZE = 12 / GRID_COLUMN;
+const DEFAULT_PEOPLE = {
+  "name":"",
+  "city":"",
+  "avatar":"",
+  "social_networks":{
+      "facebook":"",
+      "twitter":"",
+      "instagram":"",
+      "linkedin":"",
+      "skype":""
+  },
+  "company":"",
+  "position":"",
+  "isFavourite":false,
+  "isContact":false
+}
 
 const gridData = (peoples) => {
   let rowData = [];
@@ -50,9 +66,10 @@ const searchPeoples = (
 
 const getFindIndexById = (peoples, id) => {
   return peoples.findIndex(people => Number(people.id) === Number(id))
-}
+} 
 
 export {
+  DEFAULT_PEOPLE,
   FIREBASE_ENABLE,
   FIREBASE_COLLECTION_PEOPLES,
   GRID_COLUMN,

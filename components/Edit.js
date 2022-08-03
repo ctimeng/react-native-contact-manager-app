@@ -8,36 +8,57 @@ import {
   Button,
 } from "react-native";
 import { useForm, Controller } from "react-hook-form";
-import { FIREBASE_COLLECTION_PEOPLES, DEFAULT_PEOPLE } from "../global";
 import firebaseApp from "../Firebase";
+import { FIREBASE_COLLECTION_PEOPLES, DEFAULT_PEOPLE } from "../global";
 import {
   getFirestore,
-  collection,
-  addDoc
+  getDoc,
+  doc,
+  updateDoc
 } from "firebase/firestore";
+import React, { useState, useEffect } from "react";
 
-const Create = ({navigation}) => {
+const Edit = ({route, navigation }) => {
 
+  const { itemId, otherParam } = route.params;
   const db = getFirestore(firebaseApp);
-
-  const URL_REGEX =
-  /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gi;
-
+  const [loading, setLoading] = useState(false);
+  const [people, setPeople] = useState(DEFAULT_PEOPLE);
   const {
     control,
     handleSubmit,
     formState: { errors },
+    reset
   } = useForm({
     defaultValues: DEFAULT_PEOPLE
   });
 
+  const URL_REGEX =
+  /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gi;
+
+  const getPeople = async () => {
+    //setLoading(true)
+    const peopleDocRef = doc(db, FIREBASE_COLLECTION_PEOPLES, itemId)
+    const docSnap =  await getDoc(peopleDocRef);
+    setPeople(docSnap.data())
+    reset(docSnap.data())
+    console.log(docSnap.data())
+    //setLoading(false)
+  } 
+
+  useEffect(() => {
+    getPeople()
+  }, [])
+
   const onSubmit = async(data) => {
-    await addDoc(
-      collection(db, FIREBASE_COLLECTION_PEOPLES),
+    console.log(data);
+    //navigation.navigate('Home')
+    const peopleDocRef = doc(db, FIREBASE_COLLECTION_PEOPLES, itemId)
+    await updateDoc(
+      peopleDocRef,
       data
     ).catch((err) => console.error(err)).then(() => {
-      //navigation.navigate('Home')
-      navigation.goBack()
+       navigation.goBack()
     }).finally(() => {
       //setLoading(false)
     });
@@ -140,7 +161,7 @@ const Create = ({navigation}) => {
         <Controller
           control={control}
           rules={{
-            pattern: URL_REGEX
+            pattern: {value: URL_REGEX, message:"Invalid URL."}
           }}
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
@@ -153,7 +174,7 @@ const Create = ({navigation}) => {
           )}
           name="social_networks.facebook"
         />
-        {errors?.social_networks?.facebook && <Text style={styles.error}>Invalid URL.</Text>}
+        {errors?.social_networks?.facebook && <Text style={styles.error}>{errors.social_networks.facebook.message}</Text>}
 
         <Controller
           control={control}
@@ -194,7 +215,7 @@ const Create = ({navigation}) => {
         <Controller
           control={control}
           rules={{
-            pattern: URL_REGEX
+            pattern: {value: URL_REGEX, message:"Invalid URL."}
           }}
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
@@ -207,12 +228,12 @@ const Create = ({navigation}) => {
           )}
           name="social_networks.linkedin"
         />
-        {errors?.social_networks?.linkedin && <Text style={styles.error}>Invalid URL.</Text>}
+        {errors.linkedin && <Text style={styles.error}>This is required.</Text>}
 
         <Controller
           control={control}
           rules={{
-            pattern: URL_REGEX
+            pattern: {value: URL_REGEX, message:"Invalid URL."}
           }}
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
@@ -225,7 +246,7 @@ const Create = ({navigation}) => {
           )}
           name="social_networks.skype"
         />
-        {errors?.social_networks?.skype && <Text style={styles.error}>Invalid URL.</Text>}
+        {errors.linkedin && <Text style={styles.error}>This is required.</Text>}
         <Button title="Save" onPress={handleSubmit(onSubmit)} />
       </View>
     </ScrollView>
@@ -257,4 +278,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Create;
+export default Edit;

@@ -15,10 +15,22 @@ import {
   faShoppingBag,
 } from "@fortawesome/free-solid-svg-icons";
 import { connect } from "react-redux";
-import data from "./data.json";
 import { AddAllPeople } from "./actions";
 import { createStackNavigator } from "@react-navigation/stack";
 import Create from "./components/Create";
+import Edit from "./components/Edit";
+import {
+  doc,
+  getFirestore,
+  collection,
+  getDocs,
+  deleteDoc,
+  query,
+  onSnapshot,
+  orderBy
+} from "firebase/firestore";
+import firebaseApp from "./Firebase";
+import { FIREBASE_COLLECTION_PEOPLES } from "./global";
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -66,8 +78,24 @@ function Root() {
 }
 
 const App = (props) => {
+
+  const db = getFirestore(firebaseApp);
+
+  const initData = async() => {
+    const q = query(collection(db, FIREBASE_COLLECTION_PEOPLES), orderBy('name'))
+    onSnapshot(q, (querySnapshot) => {
+      let peoples = []
+      querySnapshot.docs.forEach(function(doc){
+        let people = doc.data()
+        people.id = doc.id
+        peoples.push(people)
+      })
+      props.AddAllPeople(peoples);
+    })
+  }
+
   useEffect(() => {
-    props.AddAllPeople(data.people);
+    initData()
   }, []);
 
   return (
@@ -84,6 +112,13 @@ const App = (props) => {
           }}
           name="Create"
           component={Create}
+        />
+        <Stack.Screen
+          options={{
+            title: "Edit",
+          }}
+          name="Edit"
+          component={Edit}
         />
       </Stack.Navigator>
     </NavigationContainer>

@@ -6,31 +6,51 @@ import {
   Text
 } from "react-native"
 import Row from "./Row"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { getPeoples } from "../reducers/selectors"
-import {
-  AddContact,
-  DeleteContact,
-  AddFavourite,
-  DeleteFavourite,
-} from "../actions";
+import firebaseApp from "../Firebase";
+import { doc, getFirestore, updateDoc } from "firebase/firestore";
+import { FIREBASE_COLLECTION_PEOPLES } from "../global";
 
 const PeopleScreen = (props) => {
 
+  const db = getFirestore(firebaseApp);
+
+  const dispatch = useDispatch()
   const peoples = useSelector(getPeoples)
 
+  const updateFirebase = async (id, fields, loading) => {
+    //setLoading(loading);
+    //setSelectedId(id);
+    const noteRef = doc(db, FIREBASE_COLLECTION_PEOPLES, id);
+    await updateDoc(noteRef, fields)
+      .catch((err) => {
+        console.error(err);
+      })
+      .finally(() => {
+        //setLoading(0);
+      });
+  };
+
   const onAddContact = (id) => {
-    props.AddContact(id);
-    props.navigation.navigate("CONTACT");
+    const people =  peoples.filter(
+      (people) => people.id === id
+    )[0]
+    updateFirebase(id, { isContact: !people.isContact }, 1);
+    //props.navigation.navigate("CONTACT");
   };
 
   const onAddFavourite = (id) => {
-    props.AddFavourite(id);
-    props.navigation.navigate("FAVOURITE");
+    const people =  peoples.filter(
+      (people) => people.id === id
+    )[0]
+    //props.navigation.navigate("FAVOURITE");
+    updateFirebase(id, { isFavourite: !people.isFavourite }, 2);
+    //props.navigation.navigate("FAVOURITE");
   };
 
-  const onItemPress = () => {
-    console.log("onItemPress");
+  const onItemPress = (id) => {
+    props.navigation.navigate('Edit', {itemId:id, otherParam:''});
   };
 
   const renderItem = ({ item, index }) => {
@@ -40,6 +60,7 @@ const PeopleScreen = (props) => {
         onAddContact={onAddContact}
         onAddFavourite={onAddFavourite}
         onItemPress={onItemPress}
+        isFavourite={true}
       />
     );
   };
@@ -94,19 +115,5 @@ const styles = StyleSheet.create({
     padding:10
   }
 });
-
-/*
-const mapStateToProps = (state) => ({
-  ...state,
-});
-
-function mapDispatchToProps(dispatch) {
-  return {
-    AddContact: (id) => dispatch(AddContact(id)),
-    DeleteContact: (id) => dispatch(DeleteContact(id)),
-    AddFavourite: (id) => dispatch(AddFavourite(id)),
-    DeleteFavourite: (id) => dispatch(DeleteFavourite(id)),
-  };
-}*/
 
 export default PeopleScreen;
