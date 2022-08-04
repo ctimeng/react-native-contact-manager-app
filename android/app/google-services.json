@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1021216099583",
+    "firebase_url": "https://reactjs-user-app-9e30b-default-rtdb.firebaseio.com",
+    "project_id": "reactjs-user-app-9e30b",
+    "storage_bucket": "reactjs-user-app-9e30b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1021216099583:android:14c64c6aabbb2c14c610ca",
+        "android_client_info": {
+          "package_name": "com.reactnativecontactmanagerapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1021216099583-qa7kaih76o3q2cnjdle9se50l02opoen.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPmedfHmT_PmllJTSi3Hhh5knTs1zMt8E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1021216099583-qa7kaih76o3q2cnjdle9se50l02opoen.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

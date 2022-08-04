@@ -14,26 +14,28 @@ import {
   faUser,
   faShoppingBag,
 } from "@fortawesome/free-solid-svg-icons";
-import { connect } from "react-redux";
 import { AddAllPeople } from "./actions";
 import { createStackNavigator } from "@react-navigation/stack";
 import Create from "./components/Create";
 import Edit from "./components/Edit";
 import {
-  doc,
   getFirestore,
   collection,
-  getDocs,
-  deleteDoc,
   query,
   onSnapshot,
-  orderBy
+  orderBy,
+  setLogLevel
 } from "firebase/firestore";
 import firebaseApp from "./Firebase";
 import { FIREBASE_COLLECTION_PEOPLES } from "./global";
+import { useDispatch } from "react-redux"
+import { enableFreeze } from 'react-native-screens';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
+
+enableFreeze(true);
+setLogLevel('debug');
 
 function Root() {
   return (
@@ -42,67 +44,73 @@ function Root() {
         name="HOME"
         component={HomeScreen}
         options={{
-          drawerIcon: ({ focused }) => <FontAwesomeIcon icon={faHome} />,
+          drawerIcon: ({ focused }) => <FontAwesomeIcon icon={faHome} />
         }}
       />
       <Drawer.Screen
         name="CONTACT"
         component={ContactScreen}
         options={{
-          drawerIcon: ({ focused }) => <FontAwesomeIcon icon={faAddressBook} />,
+          drawerIcon: ({ focused }) => <FontAwesomeIcon icon={faAddressBook} />
         }}
       />
       <Drawer.Screen
         name="FAVOURITE"
         component={FavouriteScreen}
         options={{
-          drawerIcon: ({ focused }) => <FontAwesomeIcon icon={faHeart} />,
+          drawerIcon: ({ focused }) => <FontAwesomeIcon icon={faHeart} />
         }}
       />
       <Drawer.Screen
-        name="POEPLE"
+        name="PEOPLE"
         component={PeopleScreen}
         options={{
-          drawerIcon: ({ focused }) => <FontAwesomeIcon icon={faUser} />,
+          drawerIcon: ({ focused }) => <FontAwesomeIcon icon={faUser} />
         }}
       ></Drawer.Screen>
       <Drawer.Screen
-        name="COMMPANY"
+        name="COMPANY"
         component={CompanyScreen}
         options={{
-          drawerIcon: ({ focused }) => <FontAwesomeIcon icon={faShoppingBag} />,
+          drawerIcon: ({ focused }) => <FontAwesomeIcon icon={faShoppingBag} />
         }}
       />
     </Drawer.Navigator>
   );
 }
 
-const App = (props) => {
-
+const App = () => {
   const db = getFirestore(firebaseApp);
 
-  const initData = async() => {
-    const q = query(collection(db, FIREBASE_COLLECTION_PEOPLES), orderBy('name'))
+  const dispatch = useDispatch()
+
+  const initData = async () => {
+    const q = query(
+      collection(db, FIREBASE_COLLECTION_PEOPLES),
+      orderBy("name")
+    );
     onSnapshot(q, (querySnapshot) => {
-      let peoples = []
-      querySnapshot.docs.forEach(function(doc){
-        let people = doc.data()
-        people.id = doc.id
-        peoples.push(people)
-      })
-      props.AddAllPeople(peoples);
-    })
-  }
+      let peoples = [];
+      querySnapshot.docs.forEach(function (doc) {
+        let people = doc.data();
+        people.id = doc.id;
+        peoples.push(people);
+      });
+      dispatch(AddAllPeople(peoples))
+    });
+  };
 
   useEffect(() => {
-    initData()
+    initData();
   }, []);
 
   return (
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          options={{ headerShown: false }}
+          options={{ 
+            headerShown: false
+           }}
           name="Root"
           component={Root}
         ></Stack.Screen>
@@ -125,14 +133,4 @@ const App = (props) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  ...state,
-});
-
-function mapDispatchToProps(dispatch) {
-  return {
-    AddAllPeople: (peoples) => dispatch(AddAllPeople(peoples)),
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App;

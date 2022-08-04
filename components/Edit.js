@@ -4,8 +4,8 @@ import {
   TextInput,
   View,
   Text,
-  TouchableOpacity,
   Button,
+  ActivityIndicator
 } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import firebaseApp from "../Firebase";
@@ -23,7 +23,6 @@ const Edit = ({route, navigation }) => {
   const { itemId, otherParam } = route.params;
   const db = getFirestore(firebaseApp);
   const [loading, setLoading] = useState(false);
-  const [people, setPeople] = useState(DEFAULT_PEOPLE);
   const {
     control,
     handleSubmit,
@@ -37,13 +36,11 @@ const Edit = ({route, navigation }) => {
   /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gi;
 
   const getPeople = async () => {
-    //setLoading(true)
+    setLoading(true)
     const peopleDocRef = doc(db, FIREBASE_COLLECTION_PEOPLES, itemId)
     const docSnap =  await getDoc(peopleDocRef);
-    setPeople(docSnap.data())
     reset(docSnap.data())
-    console.log(docSnap.data())
-    //setLoading(false)
+    setLoading(false)
   } 
 
   useEffect(() => {
@@ -51,8 +48,7 @@ const Edit = ({route, navigation }) => {
   }, [])
 
   const onSubmit = async(data) => {
-    console.log(data);
-    //navigation.navigate('Home')
+    setLoading(true)
     const peopleDocRef = doc(db, FIREBASE_COLLECTION_PEOPLES, itemId)
     await updateDoc(
       peopleDocRef,
@@ -60,13 +56,16 @@ const Edit = ({route, navigation }) => {
     ).catch((err) => console.error(err)).then(() => {
        navigation.goBack()
     }).finally(() => {
-      //setLoading(false)
+      setLoading(false)
     });
   };
 
   return (
     <ScrollView>
       <View style={styles.container}>
+      {
+        loading && (<ActivityIndicator size="large" />)
+      }
         <Controller
           control={control}
           rules={{

@@ -5,7 +5,10 @@
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"
-    ]
+    ],
+    "packagerOpts": {
+      "sourceExts": ["cjs"]
+    }
   },
   "name": "react-native-contact-manager-app"
 }

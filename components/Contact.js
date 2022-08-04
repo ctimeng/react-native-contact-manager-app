@@ -1,16 +1,15 @@
-import { FlatList, View, StyleSheet } from "react-native";
+import { FlatList, View, StyleSheet, Button, ActivityIndicator } from "react-native";
 import Row from "./Row";
 import firebaseApp from "../Firebase";
 import { doc, getFirestore, updateDoc } from "firebase/firestore";
 import { useSelector } from "react-redux"
 import { getPeoples } from "../reducers/selectors"
 import { FIREBASE_COLLECTION_PEOPLES } from "../global";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    paddingTop: 22,
+    flex: 1
   },
   item: {
     padding: 10,
@@ -19,24 +18,21 @@ const styles = StyleSheet.create({
   },
 });
 
-const ContactScreen = (props) => {
-
-  const [selectedId, setSelectedId] = useState("");
-  const [loading, setLoading] = useState(0);
+const ContactScreen = ({navigation}) => {
+  const [loading, setLoading] = useState(false);
   const peoples = useSelector(getPeoples)
 
   const db = getFirestore(firebaseApp);
 
-  const updateFirebase = async (id, fields, loading) => {
-    //setLoading(loading);
-    //setSelectedId(id);
+  const updateFirebase = async (id, fields) => {
+    setLoading(true);
     const noteRef = doc(db, FIREBASE_COLLECTION_PEOPLES, id);
     await updateDoc(noteRef, fields)
       .catch((err) => {
         console.error(err);
       })
       .finally(() => {
-        //setLoading(0);
+          setLoading(false);
       });
   };
 
@@ -48,21 +44,28 @@ const ContactScreen = (props) => {
     const people =  peoples.filter(
       (people) => people.id === id
     )[0]
-    updateFirebase(id, { isContact: !people.isContact }, 1);
+    updateFirebase(id, { isContact: !people.isContact });
   }
 
   const onAddFavourite = (id) => {
     const people =  peoples.filter(
       (people) => people.id === id
     )[0]
-    //props.navigation.navigate("FAVOURITE");
-    updateFirebase(id, { isFavourite: !people.isFavourite }, 2);
+    updateFirebase(id, { isFavourite: !people.isFavourite });
   }
 
   const onItemPress = (id) => {
     console.log("onItemPress");
-    props.navigation.navigate('Edit', {itemId:id, otherParam:''});
+    navigation.navigate('Edit', {itemId:id, otherParam:''});
   }
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Button onPress={() => navigation.navigate('Create')} title="Create" />
+      ),
+    });
+  }, [navigation])
 
   const renderItem = ({ item }) => {
     return (
@@ -77,6 +80,9 @@ const ContactScreen = (props) => {
   };
   return (
     <View style={styles.container}>
+      {
+        loading && (<ActivityIndicator size="large" />)
+      }
       <FlatList data={filteredData()} renderItem={renderItem} />
     </View>
   );

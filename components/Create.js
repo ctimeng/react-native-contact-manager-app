@@ -4,8 +4,8 @@ import {
   TextInput,
   View,
   Text,
-  TouchableOpacity,
   Button,
+  ActivityIndicator
 } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { FIREBASE_COLLECTION_PEOPLES, DEFAULT_PEOPLE } from "../global";
@@ -15,10 +15,12 @@ import {
   collection,
   addDoc
 } from "firebase/firestore";
+import React, { useState } from "react";
 
 const Create = ({navigation}) => {
 
   const db = getFirestore(firebaseApp);
+  const [loading, setLoading] = useState(false)
 
   const URL_REGEX =
   /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gi;
@@ -32,20 +34,23 @@ const Create = ({navigation}) => {
   });
 
   const onSubmit = async(data) => {
+    setLoading(true)
     await addDoc(
       collection(db, FIREBASE_COLLECTION_PEOPLES),
       data
     ).catch((err) => console.error(err)).then(() => {
-      //navigation.navigate('Home')
       navigation.goBack()
     }).finally(() => {
-      //setLoading(false)
+      setLoading(false)
     });
   };
 
   return (
     <ScrollView>
       <View style={styles.container}>
+      {
+        loading && (<ActivityIndicator size="large" />)
+      }
         <Controller
           control={control}
           rules={{

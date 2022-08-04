@@ -3,21 +3,26 @@ import {
   View,
   FlatList,
   TouchableOpacity,
-  Text
+  Text,
+  TextInput
 } from "react-native"
 import Row from "./Row"
-import { useDispatch, useSelector } from "react-redux"
+import { useSelector } from "react-redux"
 import { getPeoples } from "../reducers/selectors"
 import firebaseApp from "../Firebase";
 import { doc, getFirestore, updateDoc } from "firebase/firestore";
-import { FIREBASE_COLLECTION_PEOPLES } from "../global";
+import { FIREBASE_COLLECTION_PEOPLES, searchPeoples } from "../global";
+import React, { useState } from "react";
 
-const PeopleScreen = (props) => {
+const PeopleScreen = ({ navigation }) => {
 
   const db = getFirestore(firebaseApp);
 
-  const dispatch = useDispatch()
   const peoples = useSelector(getPeoples)
+  const [loading, setLoading] = useState(false)
+  const [search, setSearch] = useState('')
+
+  const filteredData = searchPeoples(peoples, search, '')
 
   const updateFirebase = async (id, fields, loading) => {
     //setLoading(loading);
@@ -44,16 +49,15 @@ const PeopleScreen = (props) => {
     const people =  peoples.filter(
       (people) => people.id === id
     )[0]
-    //props.navigation.navigate("FAVOURITE");
     updateFirebase(id, { isFavourite: !people.isFavourite }, 2);
     //props.navigation.navigate("FAVOURITE");
   };
 
   const onItemPress = (id) => {
-    props.navigation.navigate('Edit', {itemId:id, otherParam:''});
+    navigation.navigate('Edit', {itemId:id, otherParam:''});
   };
 
-  const renderItem = ({ item, index }) => {
+  const renderItem = ({ item }) => {
     return (
       <Row
         people={item}
@@ -67,8 +71,9 @@ const PeopleScreen = (props) => {
 
   return (
     <View style={styles.container}>
-      <FlatList data={peoples} renderItem={renderItem} />
-      <TouchableOpacity onPress={() => props.navigation.navigate('Create')} style={styles.fab}>
+      <TextInput placeholder="Search" style={styles.input} onChangeText={setSearch}/>
+      <FlatList data={filteredData} renderItem={renderItem} />
+      <TouchableOpacity onPress={() => navigation.navigate('Create')} style={styles.fab}>
         <Text style={styles.fabIcon}>+</Text>
       </TouchableOpacity>
     </View>
@@ -113,6 +118,12 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
     padding:10
+  },
+  input: {
+    margin: 10,
+    height: 30,
+    borderColor: "#7a42f4",
+    borderWidth: 1,
   }
 });
 
