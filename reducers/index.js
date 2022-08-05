@@ -1,26 +1,15 @@
 import {
   ADD_ALL_PEOPLE,
   ADD_CONTACT,
-  DELETE_CONTACT,
   ADD_FAVOURITE,
-  DELETE_FAVOURITE
 } from "../actions";
 
-import { FIREBASE_COLLECTION_PEOPLES, getFindIndexById } from "../global";
-import firebaseApp from '../Firebase';
-import { doc, getFirestore, updateDoc } from "firebase/firestore";
+import { getFindIndexById } from "../global";
 
 const initialState = {
   peoples: [],
   cities: []
 };
-
-const db = getFirestore(firebaseApp);
-
-const updateFirebase = async(id, fields) => {
-  const noteRef = doc(db, FIREBASE_COLLECTION_PEOPLES, id);
-  await updateDoc(noteRef, fields);
-}
 
 export default function variable(state = initialState, action) {
   let index = 0

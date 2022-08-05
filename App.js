@@ -19,27 +19,40 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Create from "./components/Create";
 import Edit from "./components/Edit";
 import {
-  getFirestore,
   collection,
   query,
   onSnapshot,
   orderBy,
   setLogLevel
 } from "firebase/firestore";
-import firebaseApp from "./Firebase";
+import db from "./Firebase";
 import { FIREBASE_COLLECTION_PEOPLES } from "./global";
 import { useDispatch } from "react-redux"
 import { enableFreeze } from 'react-native-screens';
+import { Platform } from 'react-native';
+import CustomSidebarMenu from './components/CustomSidebarMenu'
+
+
+console.log(Platform.OS)
+if (Platform.OS !== 'web') {
+  //import 'localstorage-polyfill';
+  require('localstorage-polyfill')
+} 
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 
 enableFreeze(true);
-setLogLevel('debug');
+//setLogLevel('debug');
 
-function Root() {
+function SidebarMenu() {
   return (
-    <Drawer.Navigator initialRouteName="Home">
+    <Drawer.Navigator initialRouteName="Home" 
+    screenOptions={{
+      activeTintColor: '#e91e63',
+      itemStyle: {marginVertical: 5},
+    }}
+    drawerContent={(props) => <CustomSidebarMenu {...props} />}>
       <Drawer.Screen
         name="HOME"
         component={HomeScreen}
@@ -80,7 +93,6 @@ function Root() {
 }
 
 const App = () => {
-  const db = getFirestore(firebaseApp);
 
   const dispatch = useDispatch()
 
@@ -111,8 +123,8 @@ const App = () => {
           options={{ 
             headerShown: false
            }}
-          name="Root"
-          component={Root}
+          name="SidebarMenu"
+          component={SidebarMenu}
         ></Stack.Screen>
         <Stack.Screen
           options={{

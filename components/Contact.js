@@ -1,15 +1,21 @@
-import { FlatList, View, StyleSheet, Button, ActivityIndicator } from "react-native";
+import {
+  FlatList,
+  SafeAreaView,
+  StyleSheet,
+  Button,
+  ActivityIndicator,
+} from "react-native";
 import Row from "./Row";
-import firebaseApp from "../Firebase";
-import { doc, getFirestore, updateDoc } from "firebase/firestore";
-import { useSelector } from "react-redux"
-import { getPeoples } from "../reducers/selectors"
+import db from "../Firebase";
+import { doc, updateDoc } from "firebase/firestore";
+import { useSelector } from "react-redux";
+import { getPeoples } from "../reducers/selectors";
 import { FIREBASE_COLLECTION_PEOPLES } from "../global";
 import { useState, useEffect } from "react";
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   item: {
     padding: 10,
@@ -18,11 +24,12 @@ const styles = StyleSheet.create({
   },
 });
 
-const ContactScreen = ({navigation}) => {
+const ContactScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
-  const peoples = useSelector(getPeoples)
-
-  const db = getFirestore(firebaseApp);
+  const peoples = useSelector(getPeoples);
+  const filteredData = () => {
+    return peoples.filter((people) => people.isContact === true);
+  };
 
   const updateFirebase = async (id, fields) => {
     setLoading(true);
@@ -32,40 +39,32 @@ const ContactScreen = ({navigation}) => {
         console.error(err);
       })
       .finally(() => {
-          setLoading(false);
+        setLoading(false);
       });
   };
 
-  const filteredData = () => { 
-      return peoples.filter((people) => people.isContact === true)
+  const onAddContact = (id) => {
+    const people = peoples.filter((people) => people.id === id)[0];
+    updateFirebase(id, { isContact: !people.isContact });
   };
 
-  const onAddContact = (id) => {
-    const people =  peoples.filter(
-      (people) => people.id === id
-    )[0]
-    updateFirebase(id, { isContact: !people.isContact });
-  }
-
   const onAddFavourite = (id) => {
-    const people =  peoples.filter(
-      (people) => people.id === id
-    )[0]
+    const people = peoples.filter((people) => people.id === id)[0];
     updateFirebase(id, { isFavourite: !people.isFavourite });
-  }
+  };
 
   const onItemPress = (id) => {
     console.log("onItemPress");
-    navigation.navigate('Edit', {itemId:id, otherParam:''});
-  }
+    navigation.navigate("Edit", { itemId: id, otherParam: "" });
+  };
 
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <Button onPress={() => navigation.navigate('Create')} title="Create" />
+        <Button onPress={() => navigation.navigate("Create")} title="Create" />
       ),
     });
-  }, [navigation])
+  }, [navigation]);
 
   const renderItem = ({ item }) => {
     return (
@@ -79,12 +78,10 @@ const ContactScreen = ({navigation}) => {
     );
   };
   return (
-    <View style={styles.container}>
-      {
-        loading && (<ActivityIndicator size="large" />)
-      }
+    <SafeAreaView style={styles.container}>
+      {loading && <ActivityIndicator size="large" />}
       <FlatList data={filteredData()} renderItem={renderItem} />
-    </View>
+    </SafeAreaView>
   );
 };
 

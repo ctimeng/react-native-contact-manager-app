@@ -8,20 +8,19 @@ import {
   ActivityIndicator
 } from "react-native";
 import { useForm, Controller } from "react-hook-form";
-import firebaseApp from "../Firebase";
+import db from "../Firebase";
 import { FIREBASE_COLLECTION_PEOPLES, DEFAULT_PEOPLE } from "../global";
 import {
-  getFirestore,
   getDoc,
   doc,
   updateDoc
 } from "firebase/firestore";
 import React, { useState, useEffect } from "react";
+import CustomMenu from './CustomMenu'
 
 const Edit = ({route, navigation }) => {
 
   const { itemId, otherParam } = route.params;
-  const db = getFirestore(firebaseApp);
   const [loading, setLoading] = useState(false);
   const {
     control,
@@ -45,6 +44,16 @@ const Edit = ({route, navigation }) => {
 
   useEffect(() => {
     getPeople()
+    /*navigation.setOptions({
+      headerRight: () => (
+        <CustomMenu menutext="Menu"
+        menustyle={{marginRight: 14}}
+        textStyle={{color: 'white'}}
+        navigation={navigation}
+        route={route}
+        isIcon={true}/>
+      ),
+    });*/
   }, [])
 
   const onSubmit = async(data) => {

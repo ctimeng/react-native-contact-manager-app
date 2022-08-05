@@ -18,12 +18,20 @@ const Row = ({
   return (
     <TouchableOpacity onPress={() => onItemPress(`${people.id}`)}>
       <View style={styles.container}>
-        <View style={{ flexBasis: 100 }}>
+        <View style={{ flexBasis: 100, paddingBottom:5, paddingTop:5 }}>
           <Image
             source={{ uri: people.avatar }}
             style={{
               width: 100,
               height: 100,
+              borderRadius: 100/ 2,
+              shadowColor: '#000',
+              shadowOffset: {
+                width: 0,
+                height: 1,
+              },
+              shadowOpacity: 0.22,
+              shadowRadius: 2.22
             }}
           />
         </View>
@@ -76,6 +84,10 @@ const styles = StyleSheet.create({
     borderBottomColor: "#d9d9d9",
     flex: 1,
     justifyContent: "space-between",
+    backgroundColor:"#d9d9d9",
+    marginTop:2,
+    marginBottom:2,
+    padding:5
   },
   containButtons: {
     flex: 1,

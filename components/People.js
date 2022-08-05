@@ -1,22 +1,21 @@
 import {
   StyleSheet,
-  View,
+  SafeAreaView,
   FlatList,
   TouchableOpacity,
   Text,
-  TextInput
+  TextInput,
+  ActivityIndicator
 } from "react-native"
 import Row from "./Row"
 import { useSelector } from "react-redux"
 import { getPeoples } from "../reducers/selectors"
-import firebaseApp from "../Firebase";
+import db from "../Firebase";
 import { doc, getFirestore, updateDoc } from "firebase/firestore";
 import { FIREBASE_COLLECTION_PEOPLES, searchPeoples } from "../global";
 import React, { useState } from "react";
 
 const PeopleScreen = ({ navigation }) => {
-
-  const db = getFirestore(firebaseApp);
 
   const peoples = useSelector(getPeoples)
   const [loading, setLoading] = useState(false)
@@ -24,16 +23,15 @@ const PeopleScreen = ({ navigation }) => {
 
   const filteredData = searchPeoples(peoples, search, '')
 
-  const updateFirebase = async (id, fields, loading) => {
-    //setLoading(loading);
-    //setSelectedId(id);
+  const updateFirebase = async (id, fields) => {
+    setLoading(true);
     const noteRef = doc(db, FIREBASE_COLLECTION_PEOPLES, id);
     await updateDoc(noteRef, fields)
       .catch((err) => {
         console.error(err);
       })
       .finally(() => {
-        //setLoading(0);
+        setLoading(false);
       });
   };
 
@@ -42,7 +40,6 @@ const PeopleScreen = ({ navigation }) => {
       (people) => people.id === id
     )[0]
     updateFirebase(id, { isContact: !people.isContact }, 1);
-    //props.navigation.navigate("CONTACT");
   };
 
   const onAddFavourite = (id) => {
@@ -50,7 +47,6 @@ const PeopleScreen = ({ navigation }) => {
       (people) => people.id === id
     )[0]
     updateFirebase(id, { isFavourite: !people.isFavourite }, 2);
-    //props.navigation.navigate("FAVOURITE");
   };
 
   const onItemPress = (id) => {
@@ -70,13 +66,16 @@ const PeopleScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <TextInput placeholder="Search" style={styles.input} onChangeText={setSearch}/>
-      <FlatList data={filteredData} renderItem={renderItem} />
+    <SafeAreaView style={styles.container}>
+      <TextInput placeholder="Search" style={styles.search} onChangeText={setSearch}/>
+      {
+        loading && (<ActivityIndicator size="large" />)
+      }
+      <FlatList data={filteredData} renderItem={renderItem} style={{backgroundColor:"white"}}/>
       <TouchableOpacity onPress={() => navigation.navigate('Create')} style={styles.fab}>
         <Text style={styles.fabIcon}>+</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -119,11 +118,12 @@ const styles = StyleSheet.create({
     elevation: 5,
     padding:10
   },
-  input: {
+  search: {
     margin: 10,
     height: 30,
     borderColor: "#7a42f4",
     borderWidth: 1,
+    borderRadius: 10
   }
 });
 

@@ -1,7 +1,7 @@
-import { FlatList, View, StyleSheet, ActivityIndicator } from "react-native";
+import { FlatList, SafeAreaView, StyleSheet, ActivityIndicator } from "react-native";
 import Row from "./Row";
-import firebaseApp from "../Firebase";
-import { doc, getFirestore, updateDoc } from "firebase/firestore";
+import db from "../Firebase";
+import { doc, updateDoc } from "firebase/firestore";
 import { useSelector } from "react-redux"
 import { getPeoples } from "../reducers/selectors"
 import { FIREBASE_COLLECTION_PEOPLES } from "../global";
@@ -20,7 +20,6 @@ const styles = StyleSheet.create({
 
 const FavouriteScreen = ({navigation}) => {
 
-  const db = getFirestore(firebaseApp);
   const peoples = useSelector(getPeoples)
   const [loading, setLoading] = useState(false);
 
@@ -55,18 +54,20 @@ const FavouriteScreen = ({navigation}) => {
     return (
       <Row
         people={item}
+        onAddContact={null}
         onAddFavourite={onAddFavourite}
         onItemPress={onItemPress}
+        isFavourite={true}
       />
     );
   };
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {
         loading && (<ActivityIndicator size="large" />)
       }
       <FlatList data={filteredData()} renderItem={renderItem} />
-    </View>
+    </SafeAreaView>
   );
 };
 
