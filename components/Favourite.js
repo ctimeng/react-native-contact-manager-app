@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { FlatList, SafeAreaView, StyleSheet, ActivityIndicator } from "react-native";
 import Row from "./Row";
 import db from "../Firebase";

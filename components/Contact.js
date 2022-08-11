@@ -1,8 +1,8 @@
+import * as React from 'react';
 import {
   FlatList,
   SafeAreaView,
   StyleSheet,
-  Button,
   ActivityIndicator,
 } from "react-native";
 import Row from "./Row";
@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 import { getPeoples } from "../reducers/selectors";
 import { FIREBASE_COLLECTION_PEOPLES } from "../global";
 import { useState, useEffect } from "react";
+import { Button } from 'react-native-paper';
 
 const styles = StyleSheet.create({
   container: {
@@ -61,7 +62,9 @@ const ContactScreen = ({ navigation }) => {
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <Button onPress={() => navigation.navigate("Create")} title="Create" />
+        <Button icon="book" mode="contained" onPress={() => navigation.navigate("Create")} >
+          Create
+        </Button>
       ),
     });
   }, [navigation]);

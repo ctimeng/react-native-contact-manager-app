@@ -32,8 +32,6 @@ import { enableFreeze } from 'react-native-screens';
 import { Platform } from 'react-native';
 import CustomSidebarMenu from './components/CustomSidebarMenu'
 
-
-console.log(Platform.OS)
 if (Platform.OS !== 'web') {
   //import 'localstorage-polyfill';
   require('localstorage-polyfill')

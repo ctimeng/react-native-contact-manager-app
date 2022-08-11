@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import { getPeoples } from "../reducers/selectors";
 import { SafeAreaView, View, FlatList, StyleSheet, Text, StatusBar } from "react-native";
+import * as React from 'react';
 
 const Item = ({ title }) => (
   <View style={styles.item}>
@@ -39,12 +40,12 @@ const styles = StyleSheet.create({
   },
   item: {
     backgroundColor: "#f9c2ff",
-    padding: 20,
+    padding: 10,
     marginVertical: 8,
     marginHorizontal: 16,
   },
   title: {
-    fontSize: 32,
+    fontSize: 12
   },
 });
 
