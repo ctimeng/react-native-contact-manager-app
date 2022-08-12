@@ -7,7 +7,7 @@ import {
   TextInput,
   ActivityIndicator,
 } from "react-native";
-import Row from "./Row";
+import Row from "./customs/Row";
 import { useSelector } from "react-redux";
 import { getPeoples } from "../reducers/selectors";
 import db from "../Firebase";
@@ -18,6 +18,8 @@ import { FloatingMenu } from "react-native-floating-action-menu";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faBars, faTimes, faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { Searchbar } from 'react-native-paper';
+
+const primaryColor = '#09f';
 
 const PeopleScreen = ({ navigation }) => {
   const peoples = useSelector(getPeoples);
@@ -60,7 +62,10 @@ const PeopleScreen = ({ navigation }) => {
 
   const handleMenuToggle = (isMenuOpen) => setIsMenuOpen(isMenuOpen);
 
-  const handleItemPress = (item, index) => navigation.navigate("Create");
+  const handleItemPress = (item, index) => {
+    setIsMenuOpen(false)
+    navigation.navigate("Create")
+  };
 
   const renderItem = ({ item }) => {
     return (
@@ -72,6 +77,37 @@ const PeopleScreen = ({ navigation }) => {
         isFavourite={true}
       />
     );
+  };
+
+  const renderItemIcon = (item, index, menuState) => {
+    const { itemsDown, dimmerActive } = menuState;
+
+    const isItemPressed = itemsDown[index];
+    const color = isItemPressed ? '#fff' : primaryColor;
+
+    // Icons can be rendered however you like.
+    // Here are some examples, using data from the item object:
+
+    if (item.fa) {
+      return (
+        <FontAwesomeIcon
+          icon={item.fa}
+          size={25}
+          color={color}
+        />
+      );
+    }
+    else if (item.image) {
+      return (
+        <Image
+          source={item.image}
+          style={{ tintColor: color }}
+          resizeMode="contain"
+        />
+      );
+    }
+
+    return null;
   };
 
   return (
@@ -98,6 +134,7 @@ const PeopleScreen = ({ navigation }) => {
         isOpen={isMenuOpen}
         onMenuToggle={handleMenuToggle}
         onItemPress={handleItemPress}
+        renderItemIcon={renderItemIcon}
       />
     </SafeAreaView>
   );

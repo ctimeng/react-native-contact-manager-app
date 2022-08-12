@@ -5,7 +5,7 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from "react-native";
-import Row from "./Row";
+import Row from "./customs/Row";
 import db from "../Firebase";
 import { doc, updateDoc } from "firebase/firestore";
 import { useSelector } from "react-redux";

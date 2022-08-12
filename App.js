@@ -1,23 +1,23 @@
 import React, { useEffect } from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
-import HomeScreen from "./components/Home";
-import ContactScreen from "./components/Contact";
-import FavouriteScreen from "./components/Favourite";
-import PeopleScreen from "./components/People";
-import CompanyScreen from "./components/Company";
+import HomeScreen from "./components/HomeScreen";
+import ContactScreen from "./components/ContactScreen";
+import FavouriteScreen from "./components/FavouriteScreen";
+import PeopleScreen from "./components/PeopleScreen";
+import CompanyScreen from "./components/CompanyScreen";
+import CreateScreen from "./components/CreateScreen";
+import EditScreen from "./components/EditScreen";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
   faHome,
   faAddressBook,
   faHeart,
   faUser,
-  faShoppingBag,
+  faShoppingBag
 } from "@fortawesome/free-solid-svg-icons";
 import { AddAllPeople } from "./actions";
 import { createStackNavigator } from "@react-navigation/stack";
-import Create from "./components/Create";
-import Edit from "./components/Edit";
 import {
   collection,
   query,
@@ -30,7 +30,7 @@ import { FIREBASE_COLLECTION_PEOPLES } from "./global";
 import { useDispatch } from "react-redux"
 import { enableFreeze } from 'react-native-screens';
 import { Platform } from 'react-native';
-import CustomSidebarMenu from './components/CustomSidebarMenu'
+import CustomSidebarMenu from './components/customs/CustomSidebarMenu'
 
 if (Platform.OS !== 'web') {
   //import 'localstorage-polyfill';
@@ -129,14 +129,14 @@ const App = () => {
             title: "Create",
           }}
           name="Create"
-          component={Create}
+          component={CreateScreen}
         />
         <Stack.Screen
           options={{
             title: "Edit",
           }}
           name="Edit"
-          component={Edit}
+          component={EditScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>
